@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.MyQRCode.js"></script>
+    <script>
+        var module = ons.bootstrap();
+        ons.disableAutoStatusBarFill();  // (Monaca enables StatusBar plugin by default)
+        navigator.splashscreen.hide();
+    </script>
+    <script src="app.js"></script>
+</head>
+
+<body ng-controller="AppController">    
+    <ons-tabbar>
+        <ons-tab page="scanner.html" active="true" icon="fa-qrcode" label="My CODE" no-reload></ons-tab>
+        <ons-tab page="history.html" icon="fa-list" label="History" no-reload></ons-tab>
+    </ons-tabbar>
+    
+    <ons-template id="scanner.html">
+        <ons-navigator var="navi">
+            <ons-page>
+                <ons-toolbar>
+                    <div class="center">QR Literacy</div>
+                </ons-toolbar>
+                <div class="scanner-wrapper">
+                    <p class="scanner-label">Can Scan & Create QR CODE!</p>
+                    <div class="scanner-eye-catch">
+                        <ons-icon icon="fa-qrcode" size="160px"></ons-icon>
+                    </div>
+                    <!--<ons-button class="scanner-button" modifier="large--cta" ng-click="scan()">スキャンする</ons-button>
+                    -->
+                </div>
+                <ons-list>
+                    <ons-list-item modifier="chevron" ng-click="scan()">SCAN</ons-list-item>
+                    <ons-list-item modifier="chevron" ng-click="write()">CREATE</ons-list-item>
+                </ons-list>
+            </ons-page>
+        </ons-navigator>
+    </ons-template>
+    <ons-template id="write.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left"><ons-back-button ons-if-platform="ios">Back</ons-back-button></div>
+                <div class="center">Create QR Code</div>
+            </ons-toolbar>
+            <div class="detail-wrapper">
+                <textarea class="textarea" id="QR_content" rows="3" placeholder="input contents"></textarea>
+                <br><br>
+                <ons-button modifier="large" ng-click="QRcreate()">Create</ons-button>
+            </div>    
+        </ons-page>
+    </ons-template>
+    <ons-template id="create.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left"><ons-back-button ons-if-platform="ios">Back</ons-back-button></div>
+                <div class="center">Create Result</div>
+            </ons-toolbar>
+            <div class="detail-wrapper">
+                <div id="qr"></div>
+            </div>
+        </ons-page>
+    </ons-template>
+
+    <ons-template id="details.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left"><ons-back-button ons-if-platform="ios">Back</ons-back-button></div>
+                <div class="center">Scan Result</div>
+            </ons-toolbar>
+            <div class="detail-wrapper">
+                <textarea class="textarea" rows="3">{{currentProduct.text}}</textarea>
+                <!--<div class="detail-image-wrapper">
+                    <img ng-src="{{currentProduct.imageUrl}}" class="detail-image">
+                </div>
+                <div class="detail-price">値段: {{currentProduct.price}}円 </div>
+                <div class="detail-desc">
+                    {{currentProduct.desc}}
+                </div>-->
+                <br><br>
+                <ons-button modifier="large" ng-click="openWithBrowser(currentProduct.text)" id="BrowserOpenButton" style="display:none;">Open in Browser</ons-button>
+                <br>
+            </div>
+        </ons-page>
+    </ons-template>
+    
+    <ons-template id="history.html">
+        <ons-navigator var="navi">
+            <ons-page ng-init="confHistory()">
+                <ons-toolbar> 
+                    <div class="center">History</div>
+                    <div class="right"><ons-toolbar-button ng-click="clearHistory()">clear</ons-toolbar-button></div>
+                </ons-toolbar>
+                <ons-list>
+                    <ons-list-item ng-repeat="product in history | orderBy : '-id'" 
+                        class="item-wrapper" modifier="chevron" ng-click="pageselect(product)">
+                        <div class="item-title">
+                            {{product.rg}}
+                            
+                        </div>
+                        
+                        <ons-row>
+                            <ons-col>
+                                <div class="item-desc">
+                                    {{product.time}}
+                                </div>
+                                <div class="item-price">
+                                    <span class="item-price-digit">{{product.text}}</span>
+                                        
+                                </div>
+                            </ons-col>
+                        </ons-row>
+                    </ons-list-item>
+                </ons-list>
+                <div ng-show="history.length === 0" class="empty-history">
+                    No History
+                </div>
+            </ons-page>
+        </ons-navigator>
+    </ons-template>
+    
+</body>
+</html>
